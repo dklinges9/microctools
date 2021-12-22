@@ -45,8 +45,12 @@ converthumidity <- function (h, intype = "relative", tc = 11, pk = 101.3) {
   }
   if (intype == "relative")
     hr <- h
-  if (any(c("raster", "SpatRaster") %in% class(hr))) {
-    if (max(values(hr), na.rm = T) > 100) {
+  if (any(c("raster") %in% class(hr))) {
+    if (max(raster::values(hr), na.rm = T) > 100) {
+      warning("Some relative humidity values > 100%")
+    }
+  } if else (any(c("SpatRaster") %in% class(hr))) {
+    if (max(terra::values(hr), na.rm = T) > 100) {
       warning("Some relative humidity values > 100%")
     }
   } else {
