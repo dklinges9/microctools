@@ -45,9 +45,17 @@ converthumidity <- function (h, intype = "relative", tc = 11, pk = 101.3) {
   }
   if (intype == "relative")
     hr <- h
-  if (max(hr, na.rm = T) > 100)
-    warning(paste("Some relative humidity values > 100%",
-                  max(hr, na.rm = T)))
+  if (any(c("raster", "SpatRaster") %in% class(hr))) {
+    if (max(values(hr), na.rm = T) > 100) {
+      warning("Some relative humidity values > 100%")
+    }
+  } else {
+    if (max(hr, na.rm = T) > 100) {
+      warning(paste("Some relative humidity values > 100%",
+                    max(hr, na.rm = T)))
+    }
+  }
+  
   if (intype == "vapour pressure") {
     hr <- (ea / e0) * 100
   }
